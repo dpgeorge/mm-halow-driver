@@ -70,6 +70,7 @@ def fixup_c(filename):
     # Write out file with fixups.
     with open(filename, "w", newline="") as f:
         dedent_stack = []
+        l_prev = None
         while lines:
             # Get next line.
             l = lines.pop(0)
@@ -132,11 +133,11 @@ def main():
             # Filter against the default list of files. This is a little fiddly
             # because we need to apply both the inclusion globs given in PATHS
             # as well as the EXCLUSIONS, and use absolute paths
-            files = set(os.path.abspath(f) for f in files)
+            files = {os.path.abspath(f) for f in files}
             all_files = set(list_files(PATHS, EXCLUSIONS, TOP))
             if args.v:  # In verbose mode, log any files we're skipping
                 for f in files - all_files:
-                    print("Not checking: {}".format(f))
+                    print(f"Not checking: {f}")
             files = list(files & all_files)
     else:
         files = list_files(PATHS, EXCLUSIONS, TOP)
