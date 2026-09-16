@@ -38,9 +38,6 @@ PATHS = [
     # C
     "src/**/*.[ch]",
     "tests/**/*.[ch]",
-    # Python
-    "tests/**/*.py",
-    "tools/**/*.py",
 ]
 
 EXCLUSIONS = []
@@ -54,7 +51,6 @@ C_EXTS = (
     ".c",
     ".h",
 )
-PY_EXTS = (".py",)
 
 
 def list_files(paths, exclusions=None, prefix=""):
@@ -119,8 +115,6 @@ def fixup_c(filename):
 
 def main():
     cmd_parser = argparse.ArgumentParser(description="Auto-format C and Python files.")
-    cmd_parser.add_argument("-c", action="store_true", help="Format C code only")
-    cmd_parser.add_argument("-p", action="store_true", help="Format Python code only")
     cmd_parser.add_argument("-v", action="store_true", help="Enable verbose output")
     cmd_parser.add_argument(
         "-f",
@@ -129,10 +123,6 @@ def main():
     )
     cmd_parser.add_argument("files", nargs="*", help="Run on specific globs")
     args = cmd_parser.parse_args()
-
-    # Setting only one of -c or -p disables the other. If both or neither are set, then do both.
-    format_c = args.c or not args.p
-    format_py = args.p or not args.c
 
     # Expand the globs passed on the command line, or use the default globs above.
     files = []
@@ -166,22 +156,12 @@ def main():
             subprocess.check_call(cmd + file_args)
 
     # Format C files with uncrustify.
-    if format_c:
-        command = ["uncrustify", "-c", UNCRUSTIFY_CFG, "-lC", "--no-backup"]
-        if not args.v:
-            command.append("-q")
-        batch(command, lang_files(C_EXTS))
-        for file in lang_files(C_EXTS):
-            fixup_c(file)
-
-    # Format Python files with black.
-    if format_py:
-        command = ["black", "--fast", "--line-length=99"]
-        if args.v:
-            command.append("-v")
-        else:
-            command.append("-q")
-        batch(command, lang_files(PY_EXTS))
+    command = ["uncrustify", "-c", UNCRUSTIFY_CFG, "-lC", "--no-backup"]
+    if not args.v:
+        command.append("-q")
+    batch(command, lang_files(C_EXTS))
+    for file in lang_files(C_EXTS):
+        fixup_c(file)
 
 
 if __name__ == "__main__":
