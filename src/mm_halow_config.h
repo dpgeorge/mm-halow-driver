@@ -27,6 +27,12 @@
 /*******************************************************************************/
 // Driver options.  Defaults here; a port overrides them in its config file.
 
+// Whether to enable lwIP integration in the driver with a netif instance, along
+// with a DHCP client and server.
+#ifndef MM_HALOW_ENABLE_LWIP
+#define MM_HALOW_ENABLE_LWIP (0)
+#endif
+
 // Access point mode.  morselib's AP support is an alpha API and
 // mmwlan_ap_enable() does not currently succeed on the MM8108, so the mode is
 // built out rather than offered and failing.

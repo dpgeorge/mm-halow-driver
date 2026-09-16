@@ -21,8 +21,10 @@
 
 #include "mm_halow_config.h"
 
+#if MM_HALOW_ENABLE_LWIP
 #include "lwip/netif.h"
 #include "lwip/dhcp.h"
+#endif
 
 #include "mmwlan.h"
 
@@ -191,6 +193,7 @@ typedef struct _mm_halow_t {
     // number onto its operating class.
     const struct mmwlan_s1g_channel_list *channels;
 
+    #if MM_HALOW_ENABLE_LWIP
     // lwIP data.
     struct netif netif[MM_HALOW_ITF_MAX];
     #if LWIP_IPV4 && LWIP_DHCP
@@ -198,6 +201,7 @@ typedef struct _mm_halow_t {
     #endif
     #if MM_HALOW_ENABLE_AP
     dhcp_server_t dhcp_server;
+    #endif
     #endif
 
     // MAC address, from the transceiver's OTP or derived from the MCU's UID.

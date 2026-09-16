@@ -9,7 +9,7 @@
  */
 #include "mm_halow_config.h"
 
-#if MM_HALOW_ENABLED
+#if MM_HALOW_ENABLED && MM_HALOW_ENABLE_LWIP
 
 #include <string.h>
 
@@ -248,4 +248,4 @@ void mm_halow_cb_process_ethernet(void *cb_data, int itf,
     }
 }
 
-#endif // MM_HALOW_ENABLED
+#endif // MM_HALOW_ENABLED && MM_HALOW_ENABLE_LWIP

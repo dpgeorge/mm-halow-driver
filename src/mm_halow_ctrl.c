@@ -13,8 +13,9 @@
 
 #include <string.h>
 
-
+#if MM_HALOW_ENABLE_LWIP
 #include "lwip/prot/ethernet.h"
+#endif
 
 #include "mmwlan.h"
 #include "mmregdb.h"
@@ -674,12 +675,16 @@ int mm_halow_tcpip_link_status(mm_halow_t *self, int itf) {
     if (status != MM_HALOW_LINK_NOIP && status != MM_HALOW_LINK_UP) {
         return status;
     }
+    #if MM_HALOW_ENABLE_LWIP
     // Associated: report UP only once lwIP has an address on the interface.
     struct netif *netif = &self->netif[itf];
     if ((netif->flags & NETIF_FLAG_UP) && !ip_addr_isany(&netif->ip_addr)) {
         return MM_HALOW_LINK_UP;
     }
     return MM_HALOW_LINK_NOIP;
+    #else
+    return status;
+    #endif
 }
 
 /*******************************************************************************/
@@ -1075,6 +1080,8 @@ void mm_halow_wifi_ap_set_channel(mm_halow_t *self, uint8_t chan_num) {
 /*******************************************************************************/
 // Datapath
 
+#if MM_HALOW_ENABLE_LWIP
+
 int mm_halow_send_ethernet(mm_halow_t *self, int itf, size_t len, const void *buf, bool is_pbuf) {
     (void)itf;
 
@@ -1144,5 +1151,7 @@ int mm_halow_send_ethernet(mm_halow_t *self, int itf, size_t len, const void *bu
     mm_halow_schedule_poll();
     return 0;
 }
+
+#endif
 
 #endif // MM_HALOW_ENABLED
