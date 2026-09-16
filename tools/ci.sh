@@ -27,8 +27,7 @@ function ci_code_spell_setup {
 }
 
 function ci_code_spell_run {
-    # src/ and tests/ arrive with the driver; spell-check whatever is present.
-    codespell README.md $(test -d src && echo src) $(test -d tests && echo tests)
+    codespell
 }
 
 ########################################################################################
