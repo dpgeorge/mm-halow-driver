@@ -22,7 +22,7 @@ LDSCRIPT = mps3.ld
 ARCH   = -mthumb -mcpu=cortex-m55 -mfloat-abi=hard -mfpu=fpv5-d16
 CFLAGS = $(ARCH) -std=c11 -Wall -Wextra -Werror -Wno-unused-parameter -Og -g \
           -ffreestanding -fno-common \
-          -Istub -I$(HALOW) -I../../lib/mm-iot-sdk/framework/morselib/include
+          -I. -I$(HALOW) -I../../lib/mm-iot-sdk/framework/morselib/include
 LDFLAGS = $(ARCH) -T$(LDSCRIPT) -nostartfiles -Wl,--gc-sections \
            -Wl,-Map=test_sched.map -specs=nosys.specs \
            -Wl,--no-warn-rwx-segments

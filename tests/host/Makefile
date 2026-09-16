@@ -6,7 +6,7 @@
 HALOW   = ../../src
 SDK     = ../../lib/mm-iot-sdk/framework/morselib/include
 CFLAGS  = -m32 -std=c11 -Wall -Wextra -Werror -g -O1 \
-          -Istub -I$(HALOW) -I$(SDK) -Wno-unused-parameter
+          -I. -I$(HALOW) -I$(SDK) -Wno-unused-parameter
 
 all: run
 
