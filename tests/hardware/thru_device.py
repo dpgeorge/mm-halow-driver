@@ -1,10 +1,10 @@
 # HaLow throughput soak: associate, then cycle TCP/UDP up+down until the budget runs out.
 # Buffers are fixed size -- nothing here is sized by anything off the wire.
-import network
 import socket
 import time
 
 import halow_config as cfg
+import network
 
 HOST = "192.168.0.137"
 TCP_PORT = 9001

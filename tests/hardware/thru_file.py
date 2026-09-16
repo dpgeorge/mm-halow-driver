@@ -1,7 +1,10 @@
 # Drop-tolerant HaLow throughput: writes cumulative results to /flash/hres.txt
 # after every cycle, so a mid-run USB/CDC drop still leaves the numbers on the device.
-import network, socket, time
+import socket
+import time
+
 import halow_config as cfg
+import network
 
 HOST = "192.168.0.137"
 TCP_PORT = 9001
@@ -71,12 +74,11 @@ def udp_run(d):
 
 def write(acc, cyc, assoc, conn, rssi):
     try:
-        f = open("/flash/hres.txt", "w")
-        f.write("assoc_ms %d cycles %d connected %s rssi %s\n" % (assoc, cyc, conn, rssi))
-        for k in sorted(acc):
-            sm, c, mx, mn = acc[k]
-            f.write("RESULT %-9s mean=%d min=%d max=%d n=%d\n" % (k, sm // c, mn, mx, c))
-        f.close()
+        with open("/flash/hres.txt", "w") as f:
+            f.write("assoc_ms %d cycles %d connected %s rssi %s\n" % (assoc, cyc, conn, rssi))
+            for k in sorted(acc):
+                sm, c, mx, mn = acc[k]
+                f.write("RESULT %-9s mean=%d min=%d max=%d n=%d\n" % (k, sm // c, mn, mx, c))
     except Exception as e:
         print("write err", e)
 
@@ -89,7 +91,8 @@ t0 = time.ticks_ms()
 w.connect(cfg.SSID, cfg.KEY)
 while not w.isconnected():
     if time.ticks_diff(time.ticks_ms(), t0) > 30000:
-        open("/flash/hres.txt", "w").write("assoc FAILED\n")
+        with open("/flash/hres.txt", "w") as f:
+            f.write("assoc FAILED\n")
         raise SystemExit
     time.sleep_ms(100)
 assoc = time.ticks_diff(time.ticks_ms(), t0)
